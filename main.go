@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 )
@@ -42,6 +43,11 @@ func main() {
 	println("后序遍历end-------")
 
 	println("树的深度-------"+strconv.Itoa(getHeight(tree.RootNode)))
+
+	println("查找begin------")
+	str, _ := json.Marshal(Search(1, &tree.RootNode))
+	println(string(str))
+	println("查找end------")
 }
 
 func CreateTree(value int) {
@@ -115,6 +121,9 @@ func nextTraverseBTree(node TreeNode) {
 	}
 }
 
+/**
+ * 获取树的高度
+ */
 func getHeight(node TreeNode) int {
 	if node == (TreeNode{}) {
 		return 0
@@ -132,4 +141,40 @@ func getHeight(node TreeNode) int {
 		maxHeight = rightHeight
 	}
 	return maxHeight + 1
+}
+
+func Search(value int, node *TreeNode) *TreeNode {
+	if node == nil {
+		return nil
+	}
+	if value < node.Value {
+		return Search(value, node.LeftNode)
+	}
+	if value > node.Value {
+		return Search(value, node.RightNode)
+	}
+	return node
+}
+
+func GetChild(node *TreeNode) (*TreeNode,bool) {
+	if node.LeftNode != nil {
+		return node.LeftNode, true
+	}
+	if node.RightNode != nil {
+		return node.RightNode, true
+	}
+	return nil, false
+}
+
+func delNode(value int) {
+	node := Search(value, &tree.RootNode)
+	childNode, hasChild := GetChild(node)
+	// 如果是叶子节点
+	if !hasChild {
+		node = nil
+	}
+	// 有左子节点或右子节点
+	if childNode != nil {
+
+	}
 }
